@@ -1,0 +1,10 @@
+Package: griffun
+Type: Package
+Title: R functions built by Drew Griffith
+Version: 1.4.2
+Date: 2014-12-23
+Author: Drew griffith
+Maintainer: Drew Griffith <wgriffith2@liberty.edu>
+Description: These are R functions that have been built for my personal use, but others are welcome to use!
+License: GPL (>= 2)
+Suggests: testthat
