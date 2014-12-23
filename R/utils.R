@@ -29,7 +29,7 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
   n.data = NROW(origdata)
   model = match.arg(model)
   if (model =="ces") {
-    Y = round(log10(origdata[((n.data-n.hist)+1):n.data]),4)
+    Y = round(log(origdata[((n.data-n.hist)+1):n.data]),4)
   } else { Y = origdata[((n.data-n.hist)+1):n.data]
   }
   if (is.null(n.match)) {
@@ -81,11 +81,11 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
     X[i,] = temp[max.index[i]:(max.index[i]+(n.hist-1))]
   }
   if (model=="ves") {
-    Z = log10(X)
+    Z = log(X)
     X = data.frame(t(rbind(X,Z)))
     df = cbind(data.frame(Y=Y),as.data.frame(X))
   } else if (model=="ces") {
-    X = t(log10(X))
+    X = t(log(X))
     df = cbind(data.frame(Y=Y),data.frame(X))
   } else { X = t(X)
            df = cbind(data.frame(Y=Y),data.frame(X))
@@ -99,10 +99,10 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
                                            n.hist+n.fore)-1)]
   }
   if (model=="ves") {
-    Z = log10(X)
+    Z = log(X)
     newdf = data.frame(t(rbind(X,Z)))
   } else if (model=="ces") {
-    X = t(log10(X))
+    X = t(log(X))
     newdf = data.frame(X)
   } else { X = t(X)
            newdf = data.frame(X)
