@@ -33,7 +33,7 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
   } else { Y = origdata[((n.data-n.hist)+1):n.data]
   }
   if (is.null(n.match)) {
-    n.match = floor(n.hist*.25)
+    n.match = floor(n.hist*.4)
   }
   if (model=="ves") {
     n.match = floor(n.match/2)
