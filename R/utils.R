@@ -1010,3 +1010,178 @@ repCol <- function(m,nc){
 }
 
 ###############################################################################
+
+###############################################################################
+# Prepare backtest data
+#' @export 
+###############################################################################
+bt.prep <- function
+(
+  b,				# enviroment with symbols time series
+  align = c('keep.all', 'remove.na'),	# alignment type
+  dates = NULL,	# subset of dates
+  fill.gaps = F	# fill gaps introduced by merging
+) 
+{    
+  # setup
+  if( !exists('symbolnames', b, inherits = F) ) b$symbolnames = ls(b)
+  symbolnames = b$symbolnames
+  nsymbols = len(symbolnames) 
+  
+  if( nsymbols > 1 ) {
+    # merge
+    out = bt.merge(b, align, dates)
+    
+    for( i in 1:nsymbols ) {
+      b[[ symbolnames[i] ]] = 
+        make.xts( coredata( b[[ symbolnames[i] ]] )[ out$date.map[,i],, drop = FALSE], out$all.dates)
+      
+      # fill gaps logic
+      map.col = find.names('Close,Volume,Open,High,Low,Adjusted', colnames(b[[ symbolnames[i] ]]))
+      if(fill.gaps & !is.na(map.col$Close)) {	
+        close = coredata(b[[ symbolnames[i] ]][,map.col$Close])
+        n = len(close)
+        last.n = max(which(!is.na(close)))
+        close = ifna.prev(close)
+        if(last.n + 5 < n) close[last.n : n] = NA
+        b[[ symbolnames[i] ]][, map.col$Close] = close
+        index = !is.na(close)	
+        
+        if(!is.na(map.col$Volume)) {
+          index1 = is.na(b[[ symbolnames[i] ]][, map.col$Volume]) & index
+          b[[ symbolnames[i] ]][index1, map.col$Volume] = 0
+        }
+        
+        #for(j in colnames(b[[ symbolnames[i] ]])) {
+        for(field in spl('Open,High,Low,Adjusted')) {
+          j = map.col[[field]]
+          if(!is.na(j)) {
+            index1 = is.na(b[[ symbolnames[i] ]][,j]) & index
+            b[[ symbolnames[i] ]][index1, j] = close[index1]
+          }}						
+      }
+    }	
+  } else {
+    if(!is.null(dates)) b[[ symbolnames[1] ]] = b[[ symbolnames[1] ]][dates,]	
+    out = list(all.dates = index.xts(b[[ symbolnames[1] ]]) )
+  }
+  
+  # dates
+  b$dates = out$all.dates
+  
+  # empty matrix		
+  dummy.mat = matrix(double(), len(out$all.dates), nsymbols)
+  colnames(dummy.mat) = symbolnames
+  dummy.mat = make.xts(dummy.mat, out$all.dates)
+  
+  # weight matrix holds signal and weight information		
+  b$weight = dummy.mat
+  
+  # execution price, if null use Close	
+  b$execution.price = dummy.mat
+  
+  # populate prices matrix
+  for( i in 1:nsymbols ) {
+    if( has.Cl( b[[ symbolnames[i] ]] ) ) {
+      dummy.mat[,i] = Cl( b[[ symbolnames[i] ]] );
+    }
+  }
+  b$prices = dummy.mat	
+}
+###############################################################################
+
+###############################################################################
+#' Create \code{\link{xts}} object, faster version of \code{\link{xts}} fucntion
+#'
+#' @param x vector / matrix / data frame
+#' @param order.by dates that correspond to rows of x
+#'
+#' @return \code{\link{xts}} object
+#' 
+#' @examples
+#' \dontrun{ 
+#' make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1))
+#' }
+#' @export 
+###############################################################################
+make.xts <- function
+(
+  x,			# data
+  order.by	# date
+)
+{
+  #Sys.setenv(TZ = 'GMT')
+  tzone = Sys.getenv('TZ')
+  
+  orderBy = class(order.by)
+  index = as.numeric(as.POSIXct(order.by, tz = tzone))
+  
+  # need to handle case for one row; i.e. len(orderBy) == 1
+  if( is.null(dim(x)) ) {
+    if( len(order.by) == 1 )
+      x = t(as.matrix(x))
+    else
+      dim(x) = c(len(x), 1)
+  }
+  x = as.matrix(x)
+  
+  x = structure(.Data = x, 
+                index = structure(index, tzone = tzone, tclass = orderBy), 
+                class = c('xts', 'zoo'), .indexCLASS = orderBy, tclass=orderBy, .indexTZ = tzone, tzone=tzone)
+  return( x )
+}
+###############################################################################
+
+###############################################################################
+#' Fast alternative to index() function for \code{\link{xts}} object
+#'
+#' NOTE index.xts is the same name as the index function in the XTS package
+#'
+#' @param x \code{\link{xts}} object
+#'
+#' @return dates
+#' 
+#' @examples
+#' \dontrun{ 
+#' index.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
+#' }
+#' @export 
+###############################################################################
+index.xts <- function
+(
+  x			# XTS object
+)
+{
+  temp = attr(x, 'index')
+  class(temp) = c('POSIXct', 'POSIXt')
+  
+  type = attr(x, '.indexCLASS')[1]
+  if( type == 'Date' || type == 'yearmon' || type == 'yearqtr')
+    temp = as.Date(temp)
+  return(temp)
+}
+
+# other variants that are not currently used
+# this function is used in plota for X axis
+index4xts <- function
+(
+  x			# XTS object
+)
+{
+  temp = attr(x, 'index')
+  class(temp)='POSIXct' 
+  
+  return(temp)
+}
+
+index2date.time <- function(temp) {
+  class(temp)='POSIXct' 
+  
+  if( attr(x, '.indexCLASS')[1] == 'Date') {	
+    as.Date(temp)
+  } else {
+    as.POSIXct(temp, tz = Sys.getenv('TZ'))
+  }
+}
+
+###############################################################################
