@@ -1010,7 +1010,100 @@ repCol <- function(m,nc){
 }
 
 ###############################################################################
+###############################################################################
+#' Create \code{\link{xts}} object, faster version of \code{\link{xts}} fucntion
+#'
+#' @param x vector / matrix / data frame
+#' @param order.by dates that correspond to rows of x
+#'
+#' @return \code{\link{xts}} object
+#' 
+#' @examples
+#' \dontrun{ 
+#' make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1))
+#' }
+#' @export 
+###############################################################################
+make.xts <- function
+(
+  x,			# data
+  order.by	# date
+)
+{
+  #Sys.setenv(TZ = 'GMT')
+  tzone = Sys.getenv('TZ')
+  
+  orderBy = class(order.by)
+  index = as.numeric(as.POSIXct(order.by, tz = tzone))
+  
+  # need to handle case for one row; i.e. len(orderBy) == 1
+  if( is.null(dim(x)) ) {
+    if( len(order.by) == 1 )
+      x = t(as.matrix(x))
+    else
+      dim(x) = c(len(x), 1)
+  }
+  x = as.matrix(x)
+  
+  x = structure(.Data = x, 
+                index = structure(index, tzone = tzone, tclass = orderBy), 
+                class = c('xts', 'zoo'), .indexCLASS = orderBy, tclass=orderBy, .indexTZ = tzone, tzone=tzone)
+  return( x )
+}
+###############################################################################
+###############################################################################
+#' Fast alternative to index() function for \code{\link{xts}} object
+#'
+#' NOTE index.xts is the same name as the index function in the XTS package
+#'
+#' @param x \code{\link{xts}} object
+#'
+#' @return dates
+#' 
+#' @examples
+#' \dontrun{ 
+#' index.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
+#' }
+#' @export 
+###############################################################################
+index.xts <- function
+(
+  x			# XTS object
+)
+{
+  temp = attr(x, 'index')
+  class(temp) = c('POSIXct', 'POSIXt')
+  
+  type = attr(x, '.indexCLASS')[1]
+  if( type == 'Date' || type == 'yearmon' || type == 'yearqtr')
+    temp = as.Date(temp)
+  return(temp)
+}
 
+# other variants that are not currently used
+# this function is used in plota for X axis
+index4xts <- function
+(
+  x			# XTS object
+)
+{
+  temp = attr(x, 'index')
+  class(temp)='POSIXct' 
+  
+  return(temp)
+}
+
+index2date.time <- function(temp) {
+  class(temp)='POSIXct' 
+  
+  if( attr(x, '.indexCLASS')[1] == 'Date') {	
+    as.Date(temp)
+  } else {
+    as.POSIXct(temp, tz = Sys.getenv('TZ'))
+  }
+}
+
+###############################################################################
 ###############################################################################
 # Prepare backtest data
 #' @export 
@@ -1088,100 +1181,4 @@ bt.prep <- function
   }
   b$prices = dummy.mat	
 }
-###############################################################################
-
-###############################################################################
-#' Create \code{\link{xts}} object, faster version of \code{\link{xts}} fucntion
-#'
-#' @param x vector / matrix / data frame
-#' @param order.by dates that correspond to rows of x
-#'
-#' @return \code{\link{xts}} object
-#' 
-#' @examples
-#' \dontrun{ 
-#' make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1))
-#' }
-#' @export 
-###############################################################################
-make.xts <- function
-(
-  x,			# data
-  order.by	# date
-)
-{
-  #Sys.setenv(TZ = 'GMT')
-  tzone = Sys.getenv('TZ')
-  
-  orderBy = class(order.by)
-  index = as.numeric(as.POSIXct(order.by, tz = tzone))
-  
-  # need to handle case for one row; i.e. len(orderBy) == 1
-  if( is.null(dim(x)) ) {
-    if( len(order.by) == 1 )
-      x = t(as.matrix(x))
-    else
-      dim(x) = c(len(x), 1)
-  }
-  x = as.matrix(x)
-  
-  x = structure(.Data = x, 
-                index = structure(index, tzone = tzone, tclass = orderBy), 
-                class = c('xts', 'zoo'), .indexCLASS = orderBy, tclass=orderBy, .indexTZ = tzone, tzone=tzone)
-  return( x )
-}
-###############################################################################
-
-###############################################################################
-#' Fast alternative to index() function for \code{\link{xts}} object
-#'
-#' NOTE index.xts is the same name as the index function in the XTS package
-#'
-#' @param x \code{\link{xts}} object
-#'
-#' @return dates
-#' 
-#' @examples
-#' \dontrun{ 
-#' index.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
-#' }
-#' @export 
-###############################################################################
-index.xts <- function
-(
-  x			# XTS object
-)
-{
-  temp = attr(x, 'index')
-  class(temp) = c('POSIXct', 'POSIXt')
-  
-  type = attr(x, '.indexCLASS')[1]
-  if( type == 'Date' || type == 'yearmon' || type == 'yearqtr')
-    temp = as.Date(temp)
-  return(temp)
-}
-
-# other variants that are not currently used
-# this function is used in plota for X axis
-index4xts <- function
-(
-  x			# XTS object
-)
-{
-  temp = attr(x, 'index')
-  class(temp)='POSIXct' 
-  
-  return(temp)
-}
-
-index2date.time <- function(temp) {
-  class(temp)='POSIXct' 
-  
-  if( attr(x, '.indexCLASS')[1] == 'Date') {	
-    as.Date(temp)
-  } else {
-    as.POSIXct(temp, tz = Sys.getenv('TZ'))
-  }
-}
-
 ###############################################################################
