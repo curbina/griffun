@@ -138,7 +138,7 @@ extendForecast <- function(dates, forecast) {
     new.dates <- as.Date(dates)
     new.dates <- seq(last(new.dates) + 1, last(new.dates) + 365, by = "day")
     new.dates <- timeDate(new.dates)
-    new.dates <- as.Date(new.dates[isBizday(new.dates, holidayNYSE())])
+    new.dates <- as.Date(new.dates[isBizday(new.dates, holidayNYSE(year = c(as.numeric(format(Sys.time(),"%Y"))-1,as.numeric(format(Sys.time(),"%Y")))))])
     new.dates <- new.dates[1:h]
     return(as.xts(forecast, new.dates))
   }
