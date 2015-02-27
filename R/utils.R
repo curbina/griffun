@@ -7,6 +7,70 @@
 ###############################################################################
 #' Set up a dataframe for regression
 #'
+#' THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
+#' For more info:
+#' http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
+#'
+#' @param x vector or xts
+#' @export
+###############################################################################
+SCTR <- function(x){
+  
+  price <- x
+  SMA200 <- 200
+  ROC125 <- 125
+  SMA50 <- 50
+  ROC20 <- 20
+  PPO.HIST <- 3
+  RSI14 <- 14
+  LT.WEIGHT <- .30
+  MD.WEIGHT <- .15
+  SH.WEIGHT <- .05
+  
+  #Long-Term Indicators (weighting)
+  #  * Percent above/below 200-day SMA (30%)
+  #  * 125-Day Rate-of-Change (30%)
+  
+  SM200 <- SMA(price, SMA200)
+  LTSMA <- ((price - SM200) / ((price + SM200) / 2)) * 100
+  LTROC <- ROC(price,ROC125) * 100
+  LT <- (LTSMA + LTROC) * LT.WEIGHT
+  
+  #Medium-Term Indicators (weighting)
+  #  * Percent above/below 50-day SMA  (15%)
+  #  * 20-day Rate-of-Change (15%)
+  
+  SM50 <- SMA(price, SMA50)
+  MDSMA <- ((price - SM50) / ((price + SM50) / 2)) * 100
+  MDROC <- ROC(price,ROC20) * 100
+  MD <- (MDSMA + MDROC) * MD.WEIGHT
+  
+  #Short-Term Indicators (weighting)
+  #  * 3-day slope of PPO-Histogram (5%)
+  #  * 14-day RSI (5%)
+  
+  EMA12 <- EMA(price,12)
+  EMA26 <- EMA(price,26)
+  PPO <- (EMA12-EMA26)/EMA26 * 100
+  PPO.linear <-  6 * ( WMA(PPO,3) -  mean(last(PPO,3))) / (3 - 1) 
+  
+  # Mutliplier to get values between 0-100
+  PPOlags <- lags(PPO.linear)
+  PPOdiff <- PPOlags[,1] - PPOlags[,2]
+  NetChgAvg = SMA(PPOdiff, 3);
+  TotChgAvg = SMA(abs(PPOdiff), 3);
+  ChgRatio = iif(TotChgAvg != 0, (NetChgAvg / TotChgAvg),0);
+  
+  SHPPO = round(50 * (ChgRatio + 1),3) / 100
+  SHRSI <- RSI(price,14) 
+  SH <- (SHPPO + SHRSI) * SH.WEIGHT
+  
+  output <- round(LT + MD + SH, 1)
+  return(output)
+}
+###############################################################################
+#' Set up a dataframe for regression
+#'
 #' This function, when supplied a vector, looks for matches based on correlation
 #' or coefficient determination and returns a data frame preparing for a regression model.
 #' The function also outputs "newdata" to be used in the forecast horizon if needed, and
