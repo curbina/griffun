@@ -4,11 +4,11 @@
 #
 # For more information please visit my blog at http://drewgriffith15.tumblr.com/
 ###############################################################################
-#' THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
-#' For more info:
-#' http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
+#' StockCharts Technical Rank
 #'
 #' @param x vector or xts
+#' @references
+#' \url{http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr}
 #' @export
 ###############################################################################
 SCTR <- function(x){

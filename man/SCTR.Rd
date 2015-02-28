@@ -2,9 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{SCTR}
 \alias{SCTR}
-\title{THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
-For more info:
-http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr}
+\title{StockCharts Technical Rank}
 \usage{
 SCTR(x)
 }
@@ -12,8 +10,9 @@ SCTR(x)
 \item{x}{vector or xts}
 }
 \description{
-THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
-For more info:
-http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr
+StockCharts Technical Rank
+}
+\references{
+\url{http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr}
 }
 
