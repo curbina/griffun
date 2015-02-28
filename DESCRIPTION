@@ -3,7 +3,7 @@ Type: Package
 Title: R functions built by Drew Griffith
 Version: 1.4.4
 Date: 2015-02-27
-Author: Drew griffith
+Author: Drew Griffith
 Maintainer: Drew Griffith
 Description: These are R functions that have been built for my personal use, but others are welcome to use!
 License: GPL (>= 2)
