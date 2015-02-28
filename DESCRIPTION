@@ -1,10 +1,11 @@
 Package: griffun
-Type: Package
-Title: R functions built by Drew Griffith
-Version: 1.4.4
+Version: 1.4.5
 Date: 2015-02-27
+Title: My Collection of Functions
 Author: Drew Griffith
-Maintainer: Drew Griffith
-Description: These are R functions that have been built for my personal use, but others are welcome to use!
-License: GPL (>= 2)
+Maintainer: Drew Griffith <wgriffith2@gmail.com>
+Depends: R (>= 1.8.0), nlme
 Suggests: testthat
+Description: Anyone who finds a function suitable for reuse is welcome
+License: GPL (>= 2)
+URL: http://drewgriffith15.tumblr.com/
