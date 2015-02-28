@@ -2,9 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{SCTR}
 \alias{SCTR}
-\title{THIS STUDY IS A REPLICATION OF STOCKCHARTS TECHNICAL RANKING
-For more info:
-http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr}
+\title{Set up a dataframe for regression}
 \usage{
 SCTR(x)
 }
