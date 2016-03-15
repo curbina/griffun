@@ -1,8 +1,63 @@
 ###############################################################################
 # Collection of General Utilities
-# Copyright (C) 2015  Drew Griffith
+# Copyright (C) 2016  Drew Griffith
 #
 # For more information please visit my blog at http://drewgriffith15.tumblr.com/
+
+###############################################################################
+###############################################################################
+
+#' Remove prefixes or suffixes
+#' @param sep character separator, defaults to ","
+#' @param side where to look, "left" (default) or "right"
+#' @param greedy defaults to TRUE
+#' @references #' @references http://www.r-bloggers.com/string-manipulations-on-full-names/
+#' @examples 
+#' ex = c("a", "a, b", "a, b, c", "a, b, c, d")
+#' str_filter(ex, side = "left"  , greedy = TRUE)
+#' str_filter(ex, side = "right" , greedy = TRUE)
+#' str_filter(ex, side = "left"  , greedy = FALSE)
+#' str_filter(ex, side = "right" , greedy = FALSE)
+str_filter <- function(x, sep = ",", side = "left", greedy = TRUE) {
+  gsub(switch(side,
+              left  = c(ifelse(greedy, "", "?"), ")", sep, "\\s*"),
+              right = c(ifelse(greedy, "?", ""), ")\\s*", sep)) %>%
+         c("(.*", ., "(.*)") %>%
+         paste0(collapse = ""),
+       switch(side, left = "\\2", right = "\\1"), x)
+}
+###############################################################################
+
+#' Detach prefixes or suffixes
+#' @param ... arguments to \code{str_filter}
+#' @references http://www.r-bloggers.com/string-manipulations-on-full-names/
+#' @examples 
+#' ex = c("a", "a, b", "a, b, c", "a, b, c, d")
+#' str_detach(ex, side = "left"  , greedy = TRUE)
+#' str_detach(ex, side = "right" , greedy = TRUE)
+#' str_detach(ex, side = "left"  , greedy = FALSE)
+#' str_detach(ex, side = "right" , greedy = FALSE)
+###############################################################################
+str_detach <- function(x, sep = ",", side = "left", greedy = TRUE) {
+  y = str_filter(x, sep, side, greedy) %>% sapply(nchar)
+  x[ y > 0 ] = lapply(x[ y > 0 ],
+                      function(x, regex = str_filter(x, sep, side, greedy)) {
+                        y = c(
+                          switch(side,
+                                 left = str_replace(x, regex, "") %>%
+                                   str_replace(str_c(sep, "\\s*$"), ""),
+                                 right = NULL),
+                          regex,
+                          switch(side,
+                                 left = NULL,
+                                 right = str_replace(x, regex, "") %>%
+                                   str_replace(str_c("^", sep, "\\s*"), ""))
+                        )
+                        ifelse(!nchar(y), NA, y)
+                      })
+  sapply(x, function(x){ x[ switch(side, left = 1, right = 2 )]})
+}
+
 ###############################################################################
 #' StockCharts Technical Rank
 #'
