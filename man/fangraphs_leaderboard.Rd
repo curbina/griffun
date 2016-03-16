@@ -26,6 +26,5 @@ This function allows you to scrape all leaderboard statistics from FanGraphs.com
 }
 \examples{
 fgh<-fangraphs_leaderboard('bat',2013,2015, 200, 0)
-
 }
 

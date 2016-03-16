@@ -18,6 +18,5 @@ because column headings will be different for other leagues!!
 }
 \examples{
 WARGames.Hitters<-WarGames_ESPN_proj('bat',86607)
-
 }
 
