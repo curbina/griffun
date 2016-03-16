@@ -4,8 +4,12 @@ Date: 2015-02-27
 Title: My Collection of Functions
 Author: Drew Griffith
 Maintainer: Drew Griffith <wgriffith2@gmail.com>
-Depends: R (>= 1.8.0), nlme
-Suggests: testthat
+Depends:
+    R (>= 1.8.0),
+    nlme
+Suggests:
+    testthat
 Description: Anyone who finds a function suitable for reuse is welcome
 License: GPL (>= 2)
 URL: http://drewgriffith15.tumblr.com/
+RoxygenNote: 5.0.1
