@@ -150,7 +150,7 @@ ESPN_eligibility <- function(bat_pitch) {
   # Rename columns
   colnames(eligibility) <-
     c(
-      "NameTeamPos","Name","C","1B","2B","3B","SS","LF","CF","RF","DH","SP","RP"
+      "NameTeamPos","Name","C","x1B","x2B","x3B","SS","LF","CF","RF","DH","SP","RP"
     )
   
   
@@ -214,7 +214,7 @@ WarGames_ESPN_proj <- function(bat_pitch,leagueID=86607) {
   
   if (bat_pitch == 'bat') {
     end_params <- '&slotCategoryGroup=1'
-    cols <- c("Number","NameTeamPos","Type","Name","AB","1B","2B","3B","HR","BB","HBP","SAC","SB","CS","PTS")
+    cols <- c("Number","NameTeamPos","Type","Name","AB","x1B","x2B","x3B","HR","BB","HBP","SAC","SB","CS","PTS")
   } else if (bat_pitch == 'pit') {
     end_params <- '&slotCategoryGroup=2'
     cols <- c("Number","NameTeamPos","Type","Name","GS","IP","HR","BB","HB","K","SV","HD","PTS")
