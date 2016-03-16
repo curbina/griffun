@@ -12,7 +12,7 @@
 #' @return data frame
 #' @examples
 #' fgh<-fangraphs_leaderboard('bat',2013,2015, 200, 0)
-#'
+#' @export
 ###############################################################################
 
 fangraphs_leaderboard <- function(bat_pitch, yearfrom = NULL, yearto = NULL, qual=NULL, split=NULL) {
@@ -198,7 +198,7 @@ ESPN_eligibility <- function(bat_pitch) {
 #' @param leagueID ESPN league ID
 #' @examples 
 #' WARGames.Hitters<-WarGames_ESPN_proj('bat',86607)
-#' 
+#' @export
 ###############################################################################
 
 WarGames_ESPN_proj <- function(bat_pitch,leagueID=86607) {
