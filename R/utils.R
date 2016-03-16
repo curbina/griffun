@@ -1,6 +1,5 @@
 ###############################################################################
-# Collection of General Utilities
-# Copyright (C) 2016  Drew Griffith
+# Collection of General Utilities by Drew Griffith
 #
 # For more information please visit my blog at http://drewgriffith15.tumblr.com/
 
