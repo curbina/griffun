@@ -170,7 +170,7 @@ ESPN_eligibility <- function(bat_pitch) {
     str_trim(gsub('[^.a-zA-Z0-9]',' ',eligibility$Name))
   
   eligibility <- sqldf(
-    "select eligibility.*
+    "select eligibility.*,
             case when C = 'PP' then 'C'
             when x1B = 'PP' then '1B'
             when x2B = 'PP' then '2B'
