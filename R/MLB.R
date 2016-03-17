@@ -74,12 +74,12 @@ fangraphs_leaderboard <- function(bat_pitch, yearfrom = NULL, yearto = NULL, qua
   c <- as.matrix(names(fangraphs_leaders))
   c <- gsub("%", "_pct", c, fixed = TRUE)
   c <- gsub(" (pfx)", "_pfx", c, fixed = TRUE)
-  c <- gsub("+", "_", c, fixed = TRUE)
+  c <- gsub("+", "plus", c, fixed = TRUE)
   c <- gsub("/", "_", c, fixed = TRUE)
   c <- gsub("-", "_", c, fixed = TRUE)
-  c <- gsub("1B", "x1B", c, fixed = TRUE)
-  c <- gsub("2B", "x2B", c, fixed = TRUE)
-  c <- gsub("3B", "x3B", c, fixed = TRUE)
+  c <- gsub("1b", "x1b", c, fixed = TRUE)
+  c <- gsub("2b", "x2b", c, fixed = TRUE)
+  c <- gsub("3b", "x3b", c, fixed = TRUE)
   c <- ifelse(substr(c, nchar(c)-1+1, nchar(c)) == ".", gsub("\\.", "_pct", c), c)
   names(fangraphs_leaders) <- c
   
