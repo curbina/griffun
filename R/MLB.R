@@ -225,7 +225,7 @@ WarGames_ESPN_proj <- function(bat_pitch,leagueID=86607) {
       "http://games.espn.go.com/flb/tools/projections?leagueId="
       ,leagueID,end_params,"&startIndex="
     )
-  indx <- unlist(strsplit(as.character(seq(0, 900, 50)),','))
+  indx <- unlist(strsplit(as.character(seq(0, 900, 40)),','))
   urls <- paste0(base_url, rep(indx, each = 1))
   
   # Scrape
@@ -312,7 +312,7 @@ ESPN_proj <- function(bat_pitch,leagueID=0) {
       "http://games.espn.go.com/flb/tools/projections?leagueId="
       ,leagueID,end_params,"&startIndex="
     )
-  indx <- unlist(strsplit(as.character(seq(0, 900, 50)),','))
+  indx <- unlist(strsplit(as.character(seq(0, 900, 40)),','))
   urls <- paste0(base_url, rep(indx, each = 1))
   
   # Scrape
