@@ -1,6 +1,46 @@
 ###############################################################################
 ###############################################################################
 
+#' Scrape Batted Ball Distance/Velocity Data from Baseball Savant
+#'
+#' This function allows you to scrape all leaderboard statistics from the Baseball Savant batted ball data leaderboard
+#' @param qual Number of ABs that meets the qualification
+#' @return data frame
+#' @examples
+#' savant<-savant_leaderboard(20)
+#' @export
+###############################################################################
+
+savant_leaderboard <- function(qual=20) {
+  
+  library(data.table)
+  library(XML)
+  library(stringr)
+  
+  options(warn = -1)
+  
+  # qual<-ifelse(is.null(qual),20,qual)
+  
+  base_url <-
+    paste0(
+      "http://baseballsavant.com/apps/hit_leader.php?game_date=&abs=",
+      qual,"&sort=5,1"
+    )
+  
+  htmltbl <-
+    readHTMLTable(doc = base_url )
+  babip <- data.frame(htmltbl[1])
+  colnames(babip) <-
+    c(
+      "Rank","Name","AB","MaxExitVel","MinExitVel","AvgExitVel","AvgFB_LDExitVel","AvgGBExitVel","MaxDistance","AvgDist","AvgHRDistance"
+    )
+  
+  return(babip)
+
+}
+
+###############################################################################
+###############################################################################
 #' Scrape Batter Leaderboards from FanGraphs.com
 #'
 #' This function allows you to scrape all leaderboard statistics from FanGraphs.com.
@@ -8,7 +48,7 @@
 #' @param yearfrom First season for which you want data.
 #' @param yearto Last season for which you want data. If multiple years selected, data returned will be aggregate data for the date range. If yearto = yearfrom, function will return single-season data.
 #' @param qual Whether you want only batters that qualified in a given season, or the minimum number of plate appearances for inclusion. If you only want qualified hitters, use qual. If a minimumm number of plate appearaces, use the number desired.
-#' @param split '0' - full season '1' - 7 days '2' - 15 days 3' - 30 days '30' - 1st half'31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB
+#' @param split '0' - full season '1' - 7 days '2' - 15 days 3' - 30 days '30' - 1st half '31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB
 #' @return data frame
 #' @examples
 #' fgh<-fangraphs_leaderboard('bat',2013,2015, 200, 0)
@@ -263,7 +303,7 @@ WarGames_ESPN_proj <- function(bat_pitch,leagueID=86607) {
   # replace NA with 0
   ESPNprojections[is.na(ESPNprojections)] <- 0
   
-  # Parse Name
+  # Clean Name
   ESPNprojections$Name <-
     gsub(",.*$", "", ESPNprojections$NameTeamPos)
   ESPNprojections$Name <-
