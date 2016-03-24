@@ -16,7 +16,7 @@ fangraphs_leaderboard(bat_pitch, yearfrom = NULL, yearto = NULL,
 
 \item{qual}{Whether you want only batters that qualified in a given season, or the minimum number of plate appearances for inclusion. If you only want qualified hitters, use qual. If a minimumm number of plate appearaces, use the number desired.}
 
-\item{split}{'0' - full season '1' - 7 days '2' - 15 days 3' - 30 days '30' - 1st half'31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB}
+\item{split}{'0' - full season '1' - 7 days '2' - 15 days 3' - 30 days '30' - 1st half '31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB}
 }
 \value{
 data frame
