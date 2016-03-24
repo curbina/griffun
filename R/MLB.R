@@ -125,6 +125,12 @@ fangraphs_leaderboard <- function(bat_pitch, yearfrom = NULL, yearto = NULL, qua
   c <- ifelse(substr(c, nchar(c)-1+1, nchar(c)) == ".", gsub("\\.", "_pct", c), c)
   names(fangraphs_leaders) <- c
   
+  if (bat_pitch == 'bat') {
+    names(fangraphs_leaders)[73]<-"Fastball_pct"
+  } else if (bat_pitch == 'pit') {
+    names(fangraphs_leaders)[76]<-"Fastball_pct"
+  }
+  
   # Remove percentages
   for (i in c(1,4:ncol(fangraphs_leaders))) {
     fangraphs_leaders[,i] <-
