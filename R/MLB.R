@@ -4,6 +4,7 @@
 #' Scrape Batted Ball Distance/Velocity Data from Baseball Savant
 #'
 #' This function allows you to scrape all leaderboard statistics from the Baseball Savant batted ball data leaderboard
+#' @param bat_pitch either 'bat' or 'pit'
 #' @param qual Number of ABs that meets the qualification
 #' @return data frame
 #' @examples
@@ -11,7 +12,7 @@
 #' @export
 ###############################################################################
 
-savant_leaderboard <- function(qual=20) {
+savant_leaderboard <- function(bat_pitch,qual=20) {
   
   library(data.table)
   library(XML)
@@ -24,7 +25,8 @@ savant_leaderboard <- function(qual=20) {
   base_url <-
     paste0(
       "http://baseballsavant.com/apps/hit_leader.php?game_date=&abs=",
-      qual,"&sort=5,1"
+      qual,"&sort=5,1&type=",
+      bat_pitch
     )
   
   htmltbl <-
