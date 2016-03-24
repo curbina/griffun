@@ -1,15 +1,19 @@
 Package: griffun
-Version: 1.4.5
-Date: 2015-02-27
+Version: 1.5.0
+Date: 2016-03-24
 Title: My Collection of Functions
 Author: Drew Griffith
 Maintainer: Drew Griffith <wgriffith2@gmail.com>
 Depends:
-    R (>= 1.8.0),
-    nlme
+    R (>= 3.2.4),
+    nlme,
+	XML,
+	data.table,
+	stringr,
+	sqldf
 Suggests:
     testthat
 Description: Anyone who finds a function suitable for reuse is welcome
 License: GPL (>= 2)
-URL: http://drewgriffith15.tumblr.com/
+URL: https://twitter.com/drewgriffith15
 RoxygenNote: 5.0.1
