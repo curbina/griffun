@@ -1,7 +1,7 @@
 ###############################################################################
 ###############################################################################
 
-#' Scrape Batted Ball Distance/Velocity Data from Baseball Savant
+#' Stcrape Batted Ball Distance/Velocity Data from Baseball Savan
 #'
 #' This function allows you to scrape all leaderboard statistics from the Baseball Savant batted ball data leaderboard
 #' @param bat_pitch either 'bat' or 'pit'
@@ -50,7 +50,7 @@ savant_leaderboard <- function(bat_pitch,qual=20) {
 #' @param yearfrom First season for which you want data.
 #' @param yearto Last season for which you want data. If multiple years selected, data returned will be aggregate data for the date range. If yearto = yearfrom, function will return single-season data.
 #' @param qual Whether you want only batters that qualified in a given season, or the minimum number of plate appearances for inclusion. If you only want qualified hitters, use qual. If a minimumm number of plate appearaces, use the number desired.
-#' @param split '0' - full season '1' - 7 days '2' - 15 days 3' - 30 days '30' - 1st half '31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB
+#' @param split '0' - full season '1' - 7 days '2' - 15 days '3' - 30 days '30' - 1st half '31' - 2nd half '15' - Home '16' - Away '13' - vs LHP or LHB '14' - vs RHP or RHB
 #' @return data frame
 #' @examples
 #' fgh<-fangraphs_leaderboard('bat',2013,2015, 200, 0)
@@ -408,4 +408,118 @@ ESPN_proj <- function(bat_pitch,leagueID=0) {
   out <- ESPNprojections[order(ESPNprojections$Number),]
   
   return(out)
+}
+
+###############################################################################
+###############################################################################
+#' Scrape Pitching data from Baseball Reference
+#'
+#' Original code from Bill Petti and modified as needed
+#' @param bat_pitch either 'bat' or 'pit'
+#' @param t1 First date data should be scraped from. Should take the form "YEAR-DAY-MONTH"
+#' @param t2 Second date data should be scraped from. Should take the form "YEAR-DAY-MONTH"
+#' @param n use number of days prior from today
+#' @export
+#' @examples
+#' bb_p<-bbref_leaderboard('pit',"2015-05-10", "2015-06-20")
+#' bb_h<-bbref_leaderboard('bat',n=30) # current year; last 30 days from today
+
+bbref_leaderboard <- function(bat_pitch, t1=NULL, t2=NULL, n =30) {
+  
+  library(rvest)
+  library(dplyr)
+  library(stringr)
+  
+  if (bat_pitch == 'bat') {
+    pos <- 'h'
+    base_url <- paste0("http://www.baseball-reference.com/leagues/daily.cgi?user_team=&bust_cache=&type=",pos,
+                       "&lastndays=",n,
+                       "&dates=fromandto&fromandto=", t1, ".", t2,
+                       "&level=mlb&franch=&stat=&stat_value=0")
+    df <- read_html(base_url)
+    df <- df %>% html_nodes(xpath = '//*[@id="daily"]') %>% html_table(fill = TRUE)
+    df <- as.data.frame(df)[-c(1,3,5)]
+    names(df)[1:4] <- c("Name", "Age", "Level", "Team")
+    
+    # Remove percentages
+    for (i in c(5:ncol(df))) {
+      df[,i] <-
+        str_trim(str_replace_all(df[,i],"%",""))
+    }
+    
+    # Char to Number
+    for (i in c(5:ncol(df))) {
+      df[,i] <-
+        as.numeric(as.character(df[,i]))
+    }
+    
+    # replace NA with 0
+    df[is.na(df)] <- 0
+    
+    df$X1B <- with(df, H-(X2B+X3B+HR))
+    currentyear <-as.numeric(format(Sys.time(), "%Y"))
+    t1<-ifelse(is.null(t1),currentyear,t1)
+    season <- substr(t1, 1, 4)
+    df$season <- season
+    df$uBB <- with(df, BB-IBB)
+  
+    df$Team <- gsub(" $", "", df$Team, perl=T)
+    df <- filter_(df, ~Name != "Name")
+    df <- arrange_(df, ~desc(AB), ~desc(OPS))
+    
+    
+  } else if (bat_pitch == 'pit') {
+    pos <- 'p'
+    base_url <- paste0("http://www.baseball-reference.com/leagues/daily.cgi?user_team=&bust_cache=&type=",pos,
+                       "&lastndays=",n,
+                       "&dates=fromandto&fromandto=", t1, ".", t2,
+                       "&level=mlb&franch=&stat=&stat_value=0")
+    df <- read_html(base_url)
+    df <- df %>% html_nodes(xpath = '//*[@id="daily"]') %>% html_table(fill = TRUE)
+    df <- as.data.frame(df)[-c(1,3,5)]
+    names(df)[1:4] <- c("Name", "Age", "Level", "Team")
+    
+    # Remove percentages
+    for (i in c(5:ncol(df))) {
+      df[,i] <-
+        str_trim(str_replace_all(df[,i],"%",""))
+    }
+    
+    # Remove percentages
+    for (i in c(5:ncol(df))) {
+      df[,i] <-
+        str_trim(str_replace_all(df[,i],"%",""))
+    }
+    
+    # Char to Number
+    for (i in c(5:ncol(df))) {
+      df[,i] <-
+        as.numeric(as.character(df[,i]))
+    }
+    
+    # replace NA with 0
+    df[is.na(df)] <- 0
+    
+    df$X1B <- with(df, H-(X2B+X3B+HR))
+    currentyear <-as.numeric(format(Sys.time(), "%Y"))
+    t1<-ifelse(is.null(t1),currentyear,t1)
+    season <- substr(t1, 1, 4)
+    df$season <- season
+    df$uBB <- with(df, BB-IBB)
+    
+    # Percent to decimal
+    df$Str <- df$Str/100
+    df$StL <- df$StL/100
+    df$StS <- df$StS/100
+    df$GB.FB <- df$GB.FB/100
+    
+    df$SO_perc <- with(df, round(SO/BF,3))
+    df$uBB_perc <- with(df, round(uBB/BF,3))
+    df$SO_uBB <- with(df, round(SO_perc - uBB_perc))
+    df$Team <- gsub(" $", "", df$Team, perl=T)
+    df <- filter_(df, ~Name != "Name")
+    df <- arrange_(df, ~desc(IP), ~desc(WHIP))
+  }
+  
+  return(df)
 }

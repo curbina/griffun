@@ -2,11 +2,13 @@
 % Please edit documentation in R/MLB.R
 \name{savant_leaderboard}
 \alias{savant_leaderboard}
-\title{Scrape Batted Ball Distance/Velocity Data from Baseball Savant}
+\title{Stcrape Batted Ball Distance/Velocity Data from Baseball Savan}
 \usage{
-savant_leaderboard(qual = 20)
+savant_leaderboard(bat_pitch, qual = 20)
 }
 \arguments{
+\item{bat_pitch}{either 'bat' or 'pit'}
+
 \item{qual}{Number of ABs that meets the qualification}
 }
 \value{

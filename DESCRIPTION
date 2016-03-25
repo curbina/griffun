@@ -1,5 +1,5 @@
 Package: griffun
-Version: 1.5.0
+Version: 1.5.1
 Date: 2016-03-24
 Title: My Collection of Functions
 Author: Drew Griffith
@@ -10,7 +10,9 @@ Depends:
 	XML,
 	data.table,
 	stringr,
-	sqldf
+	sqldf,
+	rvest,
+	dplyr
 Suggests:
     testthat
 Description: Anyone who finds a function suitable for reuse is welcome
