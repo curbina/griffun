@@ -700,7 +700,7 @@ Heatmaps_leaderboard <- function(bat_pitch='bat') {
     df$Name <- reverse_name(df$RawName)
     
     # Resovle duplicates because of Stance
-    sqldf("select Name, Year, sum(Hits) as Hits,
+    df<-sqldf("select Name, Year, sum(Hits) as Hits,
                   avg(Distance) as Distance,
                   avg(Angle) as Angle
           from df
