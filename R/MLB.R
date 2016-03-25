@@ -668,7 +668,7 @@ HRtracker_leaderboard <- function(bat_pitch='bat') {
 #' @param bat_pitch either 'bat' or 'pit'
 #' @export
 #' @examples
-#' hrt<-HRtracker_leaderboard('bat')
+#' heatmaps<-Heatmaps_leaderboard('bat')
 
 Heatmaps_leaderboard <- function(bat_pitch='bat') {
   
@@ -690,12 +690,21 @@ Heatmaps_leaderboard <- function(bat_pitch='bat') {
         "Rank","RawName","Stance","Year","Hits","Distance","Angle"
       )
     
+    df$RawName<-str_replace(df$RawName,"Stanton Michael","Stanton Giancarlo")
+    df$RawName<-str_replace(df$RawName,"Davis Khristopher","Davis Khris")
+    df$RawName<-str_replace(df$RawName,"Moreland Mitchell","Moreland Mitch")
+    df$RawName<-str_replace(df$RawName,"Machado Manuel","Machado Manny")
+    df$RawName<-str_replace(df$RawName,"Freeman Frederick","Freeman Freddie")
+    
+    # Currently does NOT handle Jr.
+    df$Name <- reverse_name(df$RawName)
+    
     # Resovle duplicates because of Stance
-    sqldf("select RawName, Year, sum(Hits) as Hits,
+    sqldf("select Name, Year, sum(Hits) as Hits,
                   avg(Distance) as Distance,
                   avg(Angle) as Angle
           from df
-          group by RawName, Year
+          group by Name, Year
           ")
     
   }
@@ -711,38 +720,32 @@ Heatmaps_leaderboard <- function(bat_pitch='bat') {
         "Rank","RawName","Stance","Year","Hits","Distance","Angle"
       )
     
+    df$RawName<-str_replace(df$RawName,"Fister Douglas","Fister Doug")
+    df$RawName<-str_replace(df$RawName,"Archer Christopher","Archer Chris")
+    df$RawName<-str_replace(df$RawName,"Bolsinger Michael","Bolsinger Mike")
+    df$RawName<-str_replace(df$RawName,"Colome Alexander","Colome Alex")
+    df$RawName<-str_replace(df$RawName,"Martinez Nicholas","Martinez Nick")
+    
+    # Currently does NOT handle Jr.
+    df$Name <- reverse_name(df$RawName)
+    
     # Resolve duplicates because of Stance
-    df<-sqldf("select RawName, Year, sum(Hits) as Hits,
+    df<-sqldf("select Name, Year, sum(Hits) as Hits,
           avg(Distance) as Distance,
           avg(Angle) as Angle
           from df
-          group by RawName, Year
+          group by Name, Year
           ")
   }
-  
-  df$RawName<-str_replace(df$RawName,"Fister Douglas","Fister Doug")
-  df$RawName<-str_replace(df$RawName,"Archer Christopher","Archer Chris")
-  df$RawName<-str_replace(df$RawName,"Bolsinger Michael","Bolsinger Mike")
-  df$RawName<-str_replace(df$RawName,"Colome Alexander","Colome Alex")
-  df$RawName<-str_replace(df$RawName,"Martinez Nicholas","Martinez Nick")
-  
-  df$RawName<-str_replace(df$RawName,"Stanton Michael","Stanton Giancarlo")
-  df$RawName<-str_replace(df$RawName,"Davis Khristopher","Davis Khris")
-  df$RawName<-str_replace(df$RawName,"Moreland Mitchell","Moreland Mitch")
-  df$RawName<-str_replace(df$RawName,"Machado Manuel","Machado Manny")
-  df$RawName<-str_replace(df$RawName,"Freeman Frederick","Freeman Freddie")
-  
+
   # Char to Number
-  for (i in c(2:ncol(df))) {
+  for (i in c(3:ncol(df))) {
     df[,i] <-
       as.numeric(as.character(df[,i]))
   }
   
   # replace NA with 0
   df[is.na(df)] <- 0
-  
-  # Currently does NOT handle Jr.
-  df$Name <- reverse_name(df$RawName)
   
   return(df)
 }

@@ -16,6 +16,6 @@ Scrape Baseball Heatmaps leadersboards
 Limitations: Cannot change year. Always current
 }
 \examples{
-hrt<-HRtracker_leaderboard('bat')
+heatmaps<-Heatmaps_leaderboard('bat')
 }
 
