@@ -412,7 +412,7 @@ ESPN_proj <- function(bat_pitch,leagueID=0) {
 
 ###############################################################################
 ###############################################################################
-#' Scrape Pitching data from Baseball Reference
+#' Scrape Pitching or Hitting data from Baseball Reference
 #'
 #' Original code from Bill Petti and modified as needed
 #' @param bat_pitch either 'bat' or 'pit'
@@ -523,3 +523,227 @@ bbref_leaderboard <- function(bat_pitch, t1=NULL, t2=NULL, n =30) {
   
   return(df)
 }
+
+###############################################################################
+###############################################################################
+#' Scrape Home Run Tracker leadersboards
+#'
+#' @details Limitations: Cannot change year. Always current
+#' @param bat_pitch either 'bat' or 'pit'
+#' @export
+#' @examples
+#' hrt<-HRtracker_leaderboard('bat')
+
+HRtracker_leaderboard <- function(bat_pitch='bat') {
+  
+  library(XML)
+  library(dplyr)
+  library(stringr)
+  library(griffun)
+  library(Hmisc)
+  
+  if (bat_pitch == 'bat') {
+    
+    # No doubt HR
+    url <- "http://www.hittrackeronline.com/homeruns_special.php?league=&type=ND"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    nd <- data.frame(htmltbl[5])
+    colnames(nd) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Just enough HR
+    url <- "http://www.hittrackeronline.com/homeruns_special.php?league=&type=JE"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    je <- data.frame(htmltbl[5])
+    colnames(je) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Lucky HR
+    url <- "http://www.hittrackeronline.com/homeruns_special_luck.php?league=&type=L"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    luck <- data.frame(htmltbl[5])
+    colnames(luck) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Golden Sledgehammer
+    url <- "http://www.hittrackeronline.com/golden_sledgehammer.php"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    gs <- data.frame(htmltbl[5])
+    colnames(gs) <-
+      c(
+        "RawName","Team","GoldenSledgeHammer","Avg Distance"
+      )
+    
+    #Full outer join
+    m1 <- merge(x = gs, y = nd, by = "RawName", all = TRUE)
+    m2 <- merge(x = m1, y = je, by = "RawName", all = TRUE)
+    df <- merge(x = m2, y = luck, by = "RawName", all = TRUE)
+    
+    colnames(df) <- c("RawName","Team","GoldenSledgeHammer","Avg Distance","NoDoubt","JustEnough","Lucky")
+    
+  }
+  
+  
+  else if (bat_pitch == 'pit') {
+    
+    
+    # No doubt HR
+    url <- "http://www.hittrackeronline.com/homeruns_allowed_special.php?league=&type=ND"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    nd <- data.frame(htmltbl[5])
+    colnames(nd) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Just enough HR
+    url <- "http://www.hittrackeronline.com/homeruns_allowed_special.php?league=&type=JE"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    je <- data.frame(htmltbl[5])
+    colnames(je) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Lucky HR
+    url <- "http://www.hittrackeronline.com/homeruns_allowed_special_luck.php?league=&type=L"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    luck <- data.frame(htmltbl[5])
+    colnames(luck) <-
+      c(
+        "RawName","HR"
+      )
+    
+    # Golden Anvil
+    url <- "http://www.hittrackeronline.com/golden_anvil.php"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    gs <- data.frame(htmltbl[5])
+    colnames(gs) <-
+      c(
+        "RawName","Team","GoldenAnvil","Avg Distance"
+      )
+    
+    #Full outer join
+    m1 <- merge(x = gs, y = nd, by = "RawName", all = TRUE)
+    m2 <- merge(x = m1, y = je, by = "RawName", all = TRUE)
+    df <- merge(x = m2, y = luck, by = "RawName", all = TRUE)
+    
+    colnames(df) <- c("RawName","Team","GoldenAnvil","Avg Distance","NoDoubt","JustEnough","Lucky")
+    
+  }
+  
+  # Char to Number
+  for (i in c(3:ncol(df))) {
+    df[,i] <-
+      as.numeric(as.character(df[,i]))
+  }
+  
+  # replace NA with 0
+  df[is.na(df)] <- 0
+  
+  # Currently does NOT handle Jr.
+  df$Name <- reverse_name(df$RawName)
+  
+  return(df)
+}
+###############################################################################
+###############################################################################
+#' Scrape Baseball Heatmaps leadersboards
+#'
+#' @details Limitations: Cannot change year. Always current
+#' @param bat_pitch either 'bat' or 'pit'
+#' @export
+#' @examples
+#' hrt<-HRtracker_leaderboard('bat')
+
+Heatmaps_leaderboard <- function(bat_pitch='bat') {
+  
+  library(XML)
+  library(dplyr)
+  library(stringr)
+  library(griffun)
+  library(Hmisc)
+  library(sqldf)
+  
+  if (bat_pitch == 'bat') {
+    
+    url <- "http://www.baseballheatmaps.com/graph/distanceleader.php"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    df <- data.frame(htmltbl[1])
+    colnames(df) <-
+      c(
+        "Rank","RawName","Stance","Year","Hits","Distance","Angle"
+      )
+    
+    # Resovle duplicates because of Stance
+    sqldf("select RawName, Year, sum(Hits) as Hits,
+                  avg(Distance) as Distance,
+                  avg(Angle) as Angle
+          from df
+          group by RawName, Year
+          ")
+    
+  }
+  
+  else if (bat_pitch == 'pit') {
+    
+    url <- "http://www.baseballheatmaps.com/graph/pitcherdistanceleader.php"
+    htmltbl <-
+      readHTMLTable(doc = url )
+    df <- data.frame(htmltbl[1])
+    colnames(df) <-
+      c(
+        "Rank","RawName","Stance","Year","Hits","Distance","Angle"
+      )
+    
+    # Resolve duplicates because of Stance
+    df<-sqldf("select RawName, Year, sum(Hits) as Hits,
+          avg(Distance) as Distance,
+          avg(Angle) as Angle
+          from df
+          group by RawName, Year
+          ")
+  }
+  
+  df$RawName<-str_replace(df$RawName,"Fister Douglas","Fister Doug")
+  df$RawName<-str_replace(df$RawName,"Archer Christopher","Archer Chris")
+  df$RawName<-str_replace(df$RawName,"Bolsinger Michael","Bolsinger Mike")
+  df$RawName<-str_replace(df$RawName,"Colome Alexander","Colome Alex")
+  df$RawName<-str_replace(df$RawName,"Martinez Nicholas","Martinez Nick")
+  
+  df$RawName<-str_replace(df$RawName,"Stanton Michael","Stanton Giancarlo")
+  df$RawName<-str_replace(df$RawName,"Davis Khristopher","Davis Khris")
+  df$RawName<-str_replace(df$RawName,"Moreland Mitchell","Moreland Mitch")
+  df$RawName<-str_replace(df$RawName,"Machado Manuel","Machado Manny")
+  df$RawName<-str_replace(df$RawName,"Freeman Frederick","Freeman Freddie")
+  
+  # Char to Number
+  for (i in c(2:ncol(df))) {
+    df[,i] <-
+      as.numeric(as.character(df[,i]))
+  }
+  
+  # replace NA with 0
+  df[is.na(df)] <- 0
+  
+  # Currently does NOT handle Jr.
+  df$Name <- reverse_name(df$RawName)
+  
+  return(df)
+}
+###############################################################################

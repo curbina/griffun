@@ -2,7 +2,7 @@
 % Please edit documentation in R/MLB.R
 \name{bbref_leaderboard}
 \alias{bbref_leaderboard}
-\title{Scrape Pitching data from Baseball Reference}
+\title{Scrape Pitching or Hitting data from Baseball Reference}
 \usage{
 bbref_leaderboard(bat_pitch, t1 = NULL, t2 = NULL, n = 30)
 }
