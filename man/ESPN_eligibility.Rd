@@ -2,7 +2,7 @@
 % Please edit documentation in R/MLB.R
 \name{ESPN_eligibility}
 \alias{ESPN_eligibility}
-\title{Returns a full list of MLB players eligibility 
+\title{Returns a full list of MLB players eligibility
  for hitters or pitchers for ESPN Standard leagues'
  Retreives primary position only}
 \usage{
@@ -15,7 +15,7 @@ ESPN_eligibility(bat_pitch)
 data frame
 }
 \description{
-Returns a full list of MLB players eligibility 
+Returns a full list of MLB players eligibility
  for hitters or pitchers for ESPN Standard leagues'
  Retreives primary position only
 }

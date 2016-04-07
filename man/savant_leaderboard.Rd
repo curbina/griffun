@@ -2,12 +2,14 @@
 % Please edit documentation in R/MLB.R
 \name{savant_leaderboard}
 \alias{savant_leaderboard}
-\title{Stcrape Batted Ball Distance/Velocity Data from Baseball Savan}
+\title{Stcrape Batted Ball Distance/Velocity Data from Baseball Savant / MLB Statcast}
 \usage{
-savant_leaderboard(bat_pitch, qual = 20)
+savant_leaderboard(bat_pitch = "bat", year = NULL, qual = 5)
 }
 \arguments{
 \item{bat_pitch}{either 'bat' or 'pit'}
+
+\item{year}{YYYY number format}
 
 \item{qual}{Number of ABs that meets the qualification}
 }
@@ -18,6 +20,6 @@ data frame
 This function allows you to scrape all leaderboard statistics from the Baseball Savant batted ball data leaderboard
 }
 \examples{
-savant<-savant_leaderboard(20)
+savant<-savant_leaderboard('bat',2016,5)
 }
 
