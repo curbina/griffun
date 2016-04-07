@@ -486,12 +486,12 @@ age.years <- function(earlier, later)
 #'
 #' @examples
 #' \dontrun{
-#' between( 1:10, 5.5, 6.5 )
+#' btween( 1:10, 5.5, 6.5 )
 #' }
 #' @export
 ###############################################################################
 
-between <- function(x, low, high, ineq=F) {
+btween <- function(x, low, high, ineq=F) {
   if (ineq) {
     x >= low & x <= high
   } else {
@@ -848,11 +848,11 @@ fast.rep <- function(x, times) {
 #'
 #' @examples
 #' \dontrun{
-#' count(matrix(c(1,NA,2,3),2,2))
+#' cnt(matrix(c(1,NA,2,3),2,2))
 #' }
 #' @export
 ###############################################################################
-count <- function(
+cnt <- function(
   x,			# matrix with data
   side = 2	# margin along which to count
 )
