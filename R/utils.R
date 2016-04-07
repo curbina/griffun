@@ -168,7 +168,7 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
   cd.table = round(abs(correlation.table)^2,6)
   
   # find matches
-  max.index = c()
+  max.indx = c()
   max.cor = c()
   
   if (use.cd==TRUE){temp = cd.table
@@ -176,27 +176,27 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
   
   if (use.cd==TRUE){
     for(i in 1:n.match) {
-      index = which.max(temp)
-      c = temp[index]
-      max.index[i] = index
+      indx = which.max(temp)
+      c = temp[indx]
+      max.indx[i] = indx
       max.cor[i] = c
-      #temp[max(0,index):min(n.data,(index +
+      #temp[max(0,indx):min(n.data,(indx +
       #  (n.fore+n.hist)))] = NA 12.10.13
-      temp[max(0,index)] = NA
+      temp[max(0,indx)] = NA
     }} else {for(i in 1:n.match) {
-      index = which.max(temp)
-      c = temp[index]
-      max.index[i] = index
+      indx = which.max(temp)
+      c = temp[indx]
+      max.indx[i] = indx
       max.cor[i] = c
-      temp[max(0,index):min(n.data,(index +
+      temp[max(0,indx):min(n.data,(indx +
                                       (n.fore+n.hist)))] = NA}}
   
   # model
-  n.match = NROW(max.index)
+  n.match = NROW(max.indx)
   X = matrix(NA, nr=(n.match), nc=(n.hist))
   temp = origdata
   for(i in 1:n.match) {
-    X[i,] = temp[max.index[i]:(max.index[i]+(n.hist-1))]
+    X[i,] = temp[max.indx[i]:(max.indx[i]+(n.hist-1))]
   }
   if (model=="ves") {
     Z = log(X)
@@ -213,7 +213,7 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
   X = matrix(NA, nr=(n.match), nc=(n.fore))
   temp = origdata
   for(i in 1:n.match) {
-    X[i,] = temp[(max.index[i]+n.hist):((max.index[i]+
+    X[i,] = temp[(max.indx[i]+n.hist):((max.indx[i]+
                                            n.hist+n.fore)-1)]
   }
   if (model=="ves") {
@@ -226,7 +226,7 @@ find.matches <- function(data, n.hist = 35, n.fore = 15, n.match=NULL,
            newdf = data.frame(X)
   }
   
-  out = list(df,newdf,max.index)
+  out = list(df,newdf,max.indx)
   names(out)[1] = "rmodel"
   names(out)[2] = "fmodel"
   names(out)[3] = "matchindx"
@@ -475,7 +475,7 @@ age.years <- function(earlier, later)
 ###############################################################################
 #' Between
 #'
-#' This function mimics the SQL between clause and returns a logical index
+#' This function mimics the SQL between clause and returns a logical indx
 #'
 #' @param x numeric
 #' @param low numeric
@@ -1152,7 +1152,7 @@ make.xts <- function
   tzone = Sys.getenv('TZ')
   
   orderBy = class(order.by)
-  index = as.numeric(as.POSIXct(order.by, tz = tzone))
+  indx = as.numeric(as.POSIXct(order.by, tz = tzone))
   
   # need to handle case for one row; i.e. len(orderBy) == 1
   if( is.null(dim(x)) ) {
@@ -1164,15 +1164,15 @@ make.xts <- function
   x = as.matrix(x)
   
   x = structure(.Data = x, 
-                index = structure(index, tzone = tzone, tclass = orderBy), 
-                class = c('xts', 'zoo'), .indexCLASS = orderBy, tclass=orderBy, .indexTZ = tzone, tzone=tzone)
+                indx = structure(indx, tzone = tzone, tclass = orderBy), 
+                class = c('xts', 'zoo'), .indxCLASS = orderBy, tclass=orderBy, .indxTZ = tzone, tzone=tzone)
   return( x )
 }
 ###############################################################################
 ###############################################################################
-#' Fast alternative to index() function for \code{\link{xts}} object
+#' Fast alternative to indx() function for \code{\link{xts}} object
 #'
-#' NOTE index.xts is the same name as the index function in the XTS package
+#' NOTE indx.xts is the same name as the indx function in the XTS package
 #'
 #' @param x \code{\link{xts}} object
 #'
@@ -1180,19 +1180,19 @@ make.xts <- function
 #' 
 #' @examples
 #' \dontrun{ 
-#' index.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
+#' indx.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
 #' }
 #' @export 
 ###############################################################################
-index.xts <- function
+indx.xts <- function
 (
   x			# XTS object
 )
 {
-  temp = attr(x, 'index')
+  temp = attr(x, 'indx')
   class(temp) = c('POSIXct', 'POSIXt')
   
-  type = attr(x, '.indexCLASS')[1]
+  type = attr(x, '.indxCLASS')[1]
   if( type == 'Date' || type == 'yearmon' || type == 'yearqtr')
     temp = as.Date(temp)
   return(temp)
@@ -1200,21 +1200,21 @@ index.xts <- function
 
 # other variants that are not currently used
 # this function is used in plota for X axis
-index4xts <- function
+indx4xts <- function
 (
   x			# XTS object
 )
 {
-  temp = attr(x, 'index')
+  temp = attr(x, 'indx')
   class(temp)='POSIXct' 
   
   return(temp)
 }
 
-index2date.time <- function(temp) {
+indx2date.time <- function(temp) {
   class(temp)='POSIXct' 
   
-  if( attr(x, '.indexCLASS')[1] == 'Date') {	
+  if( attr(x, '.indxCLASS')[1] == 'Date') {	
     as.Date(temp)
   } else {
     as.POSIXct(temp, tz = Sys.getenv('TZ'))
@@ -1256,25 +1256,25 @@ bt.prep <- function
         close = ifna.prev(close)
         if(last.n + 5 < n) close[last.n : n] = NA
         b[[ symbolnames[i] ]][, map.col$Close] = close
-        index = !is.na(close)	
+        indx = !is.na(close)	
         
         if(!is.na(map.col$Volume)) {
-          index1 = is.na(b[[ symbolnames[i] ]][, map.col$Volume]) & index
-          b[[ symbolnames[i] ]][index1, map.col$Volume] = 0
+          indx1 = is.na(b[[ symbolnames[i] ]][, map.col$Volume]) & indx
+          b[[ symbolnames[i] ]][indx1, map.col$Volume] = 0
         }
         
         #for(j in colnames(b[[ symbolnames[i] ]])) {
         for(field in spl('Open,High,Low,Adjusted')) {
           j = map.col[[field]]
           if(!is.na(j)) {
-            index1 = is.na(b[[ symbolnames[i] ]][,j]) & index
-            b[[ symbolnames[i] ]][index1, j] = close[index1]
+            indx1 = is.na(b[[ symbolnames[i] ]][,j]) & indx
+            b[[ symbolnames[i] ]][indx1, j] = close[indx1]
           }}						
       }
     }	
   } else {
     if(!is.null(dates)) b[[ symbolnames[1] ]] = b[[ symbolnames[1] ]][dates,]	
-    out = list(all.dates = index.xts(b[[ symbolnames[1] ]]) )
+    out = list(all.dates = indx.xts(b[[ symbolnames[1] ]]) )
   }
   
   # dates

@@ -19,7 +19,7 @@ between(x, low, high, ineq = F)
 logical
 }
 \description{
-This function mimics the SQL between clause and returns a logical index
+This function mimics the SQL between clause and returns a logical indx
 }
 \examples{
 \dontrun{
