@@ -15,6 +15,7 @@
 
 savant_leaderboard <- function(bat_pitch = 'bat',year = NULL,qual = 5) {
   library(rvest)
+  library(stringr)
   
   options(warn = -1)
   
@@ -47,6 +48,14 @@ savant_leaderboard <- function(bat_pitch = 'bat',year = NULL,qual = 5) {
     c(
       "Rank", "Name", "Events", "MaxEV", "MinEV", "AvgEV", "Avg_FB_LD_EV", "Avg_GB_EV", "Max_Distance", "Avg_Distance", "Avg_HR_Distance"
     )
+  
+  #Replacing Names that match Fangraphs
+  df$Name <-
+    str_replace(df$Name,"Steven Souza Jr.","Steven Souza")
+  
+  df$Name <-
+    str_replace(df$Name,"Norichika Aoki","Nori Aoki")
+  
   
   return(df)
   
