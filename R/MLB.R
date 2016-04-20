@@ -40,10 +40,12 @@ savant_leaderboard <- function(bat_pitch = 'bat',year = NULL,qual = 5) {
       bat_pitch
     )
   
+  
   df <- read_html(base_url)
-  df <-
-    df %>% html_nodes(xpath = '//*[@id="tblLeaderBoard"]') %>% html_table(fill = TRUE)
+  df <- df %>% html_nodes(xpath = '//*[@id="leaderboard"]') %>% html_table(fill = TRUE)
+  # guess_encoding(df)
   df <- as.data.frame(df)
+  
   names(df) <-
     c(
       "Rank", "Name", "Events", "MaxEV", "MinEV", "AvgEV", "Avg_FB_LD_EV", "Avg_GB_EV", "Max_Distance", "Avg_Distance", "Avg_HR_Distance"
@@ -729,6 +731,8 @@ Heatmaps_leaderboard <- function(bat_pitch = 'bat') {
       str_replace(df$RawName,"Machado Manuel","Machado Manny")
     df$RawName <-
       str_replace(df$RawName,"Freeman Frederick","Freeman Freddie")
+    df$RawName <-
+      str_replace(df$RawName,"Park Byung Ho","Park Byung-ho")
     
     # Currently does NOT handle Jr.
     df$Name <- reverse_name(df$RawName)
