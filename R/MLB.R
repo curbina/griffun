@@ -1,67 +1,146 @@
 ###############################################################################
 ###############################################################################
 
-#' Stcrape Batted Ball Distance/Velocity Data from Baseball Savant / MLB Statcast
+#' Scrape Batted Ball Distance/Velocity Data from Baseball Savant / MLB Statcast
 #'
 #' This function allows you to scrape all leaderboard statistics from the Baseball Savant batted ball data leaderboard
 #' @param bat_pitch either 'bat' or 'pit'
 #' @param year YYYY number format
+#' @param from.date YYYY-MM-DD format
 #' @param qual Number of ABs that meets the qualification
 #' @return data frame
 #' @examples
-#' savant<-savant_leaderboard('bat',2016,5)
+#' statcast<-statcast_leaderboard('bat', 2016, "2016-04-10", 20)
 #' @export
 ###############################################################################
 
-savant_leaderboard <- function(bat_pitch = 'bat',year = NULL,qual = 5) {
-  library(rvest)
-  library(stringr)
-  
-  options(warn = -1)
-  
-  if (bat_pitch == 'bat') {
-    bat_pitch <- 'batter'
-  } else if (bat_pitch == 'pit') {
-    bat_pitch <- 'pitcher'
+statcast_leaderboard <-
+  function(bat_pitch = 'bat',year = NULL, from.date = NULL, qual = 20) {
+    library(rvest)
+    library(stringr)
+    library(sqldf)
+    
+    options(warn = -1)
+    
+    if (bat_pitch == 'bat') {
+      bat_pitch <- 'batter'
+    } else if (bat_pitch == 'pit') {
+      bat_pitch <- 'pitcher'
+    }
+    
+    # default to current year unless specified
+    year <- ifelse(is.null(year),
+                   ifelse(
+                     as.numeric(format(Sys.time(), "%m%d")) <= 331,as.numeric(format(Sys.time(), "%Y")) -
+                       1,as.numeric(format(Sys.time(), "%Y"))
+                   )
+                   ,year)
+    
+    # default to pull since APR 1st unless specified
+    from_date <-
+      ifelse(is.null(from.date),paste0(year,"-","04-01"),from.date)
+    
+    # Scrap AVG distance
+    base_url <-
+      paste0(
+        "https://baseballsavant.mlb.com/statcast_search?hfPT=&hfZ=&hfGT=R%7C&hfPR=&hfAB=&stadium=&hfBBT=&hfBBL=&hfC=&season=",
+        "&player_type=",
+        bat_pitch,
+        "&hfOuts=&pitcher_throws=&batter_stands=&start_speed_gt=&start_speed_lt=&perceived_speed_gt=&perceived_speed_lt=&spin_rate_gt=&spin_rate_lt=&exit_velocity_gt=&exit_velocity_lt=&launch_angle_gt=&launch_angle_lt=&distance_gt=&distance_lt=&batted_ball_angle_gt=&batted_ball_angle_lt=&game_date_gt=",
+        from_date,
+        "&game_date_lt=&team=&position=&hfRO=&home_road=&hfInn=&min_pitches=0&min_results=0&group_by=name&sort_col=bbdist&sort_order=desc&min_abs=",
+        qual,
+        "&px1=&px2=&pz1=&pz2=#results"
+      )
+    
+    df <- read_html(base_url)
+    df <-
+      df %>% html_nodes(xpath = '//*[@id="search_results"]') %>%  html_table(fill = TRUE)
+    
+    # guess_encoding(df)
+    avg_dist <- as.data.frame(df)
+    # avg_dist <- avg_dist[,c(1:4)]
+    
+    names(avg_dist) <-
+      c("Rank", "Name", "Events", "Avg_Distance","V1","V2","V3","V4","V5","V6","V7","v8","V9")
+    
+    avg_dist <- subset(avg_dist, select = c("Rank", "Name", "Events", "Avg_Distance"))
+    
+    avg_dist <- avg_dist[complete.cases(avg_dist),]
+    avg_dist$Avg_Distance <-
+      substr(avg_dist$Avg_Distance,1,nchar(avg_dist$Avg_Distance) - 3)
+    
+    # Char to integer
+    for (i in c(3:ncol(avg_dist))) {
+      avg_dist[,i] <-
+        as.integer(as.character(avg_dist[,i]))
+    }
+    
+    #Replacing Names that match Fangraphs
+    avg_dist$Name <-
+      str_replace(avg_dist$Name,"Steven Souza Jr.","Steven Souza")
+    
+    avg_dist$Name <-
+      str_replace(avg_dist$Name,"Norichika Aoki","Nori Aoki")
+    
+    # Scrap AVG Exit Velocity
+    base_url <-
+      paste0(
+        "https://baseballsavant.mlb.com/statcast_search?hfPT=&hfZ=&hfGT=R%7C&hfPR=&hfAB=&stadium=&hfBBT=&hfBBL=&hfC=&season=",
+        "&player_type=",
+        bat_pitch,
+        "&hfOuts=&pitcher_throws=&batter_stands=&start_speed_gt=&start_speed_lt=&perceived_speed_gt=&perceived_speed_lt=&spin_rate_gt=&spin_rate_lt=&exit_velocity_gt=&exit_velocity_lt=&launch_angle_gt=&launch_angle_lt=&distance_gt=&distance_lt=&batted_ball_angle_gt=&batted_ball_angle_lt=&game_date_gt=",
+        from_date,
+        "&game_date_lt=&team=&position=&hfRO=&home_road=&hfInn=&min_pitches=0&min_results=0&group_by=name&sort_col=exit_velocity&sort_order=desc&min_abs=",
+        qual,
+        "&px1=&px2=&pz1=&pz2=#results"
+      )
+    
+    df <- read_html(base_url)
+    df <-
+      df %>% html_nodes(xpath = '//*[@id="search_results"]') %>%  html_table(fill = TRUE)
+    
+    # guess_encoding(df)
+    avg_exit <- as.data.frame(df)
+    # avg_exit <- avg_exit[,c(1:4)]
+    
+    names(avg_exit) <-
+      c("Rank", "Name", "Events", "Avg_Exit_Velocity","V1","V2","V3","V4","V5","V6","V7","v8","V9")
+    
+    avg_exit <- subset(avg_exit, select = c("Rank", "Name", "Events", "Avg_Exit_Velocity"))
+    
+    avg_exit <- avg_exit[complete.cases(avg_exit),]
+    avg_exit$Avg_Exit_Velocity <-
+      substr(avg_exit$Avg_Exit_Velocity,1,nchar(avg_exit$Avg_Exit_Velocity) -
+               4)
+    
+    # Char to numeric
+    for (i in c(3:ncol(avg_exit))) {
+      avg_exit[,i] <-
+        as.numeric(as.character(avg_exit[,i]))
+    }
+    
+    #Replacing Names that match Fangraphs
+    avg_exit$Name <-
+      str_replace(avg_exit$Name,"Steven Souza Jr.","Steven Souza")
+    
+    avg_exit$Name <-
+      str_replace(avg_exit$Name,"Norichika Aoki","Nori Aoki")
+    
+    #combine distance and exit velocity
+    df <-
+      sqldf(
+        "select avg_dist.Name, avg_dist.Events, avg_dist.Avg_Distance, avg_exit.Avg_Exit_Velocity
+        from avg_dist
+        join avg_exit on lower(avg_exit.Name) = lower(avg_dist.Name)
+        where 1=1
+        order by avg_exit.Avg_Exit_Velocity desc"
+      )
+    
+    return(df)
+    
   }
-  
-  year <- ifelse(is.null(year),
-                 ifelse(
-                   as.numeric(format(Sys.time(), "%m%d")) <= 331,as.numeric(format(Sys.time(), "%Y")) -
-                     1,as.numeric(format(Sys.time(), "%Y"))
-                 )
-                 ,year)
-  
-  base_url <-
-    paste0(
-      "https://baseballsavant.mlb.com/statcast_leaderboard?year=",
-      year,"&abs=",
-      qual,"&player_type=",
-      bat_pitch
-    )
-  
-  
-  df <- read_html(base_url)
-  df <- df %>% html_nodes(xpath = '//*[@id="leaderboard"]') %>% html_table(fill = TRUE)
-  # guess_encoding(df)
-  df <- as.data.frame(df)
-  
-  names(df) <-
-    c(
-      "Rank", "Name", "Events", "MaxEV", "MinEV", "AvgEV", "Avg_FB_LD_EV", "Avg_GB_EV", "Max_Distance", "Avg_Distance", "Avg_HR_Distance"
-    )
-  
-  #Replacing Names that match Fangraphs
-  df$Name <-
-    str_replace(df$Name,"Steven Souza Jr.","Steven Souza")
-  
-  df$Name <-
-    str_replace(df$Name,"Norichika Aoki","Nori Aoki")
-  
-  
-  return(df)
-  
-}
+
 
 ###############################################################################
 ###############################################################################
