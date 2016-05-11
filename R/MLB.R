@@ -159,8 +159,7 @@ statcast_leaderboard <-
 ###############################################################################
 
 fangraphs_leaderboard <-
-  function(bat_pitch, yearfrom = NULL, yearto = NULL, qual = NULL, split =
-             NULL) {
+  function(bat_pitch = 'bat', yearfrom = NULL, yearto = NULL, qual = NULL, split = NULL) {
     library(data.table)
     library(XML)
     library(stringr)
@@ -236,7 +235,11 @@ fangraphs_leaderboard <-
       ifelse(substr(c, nchar(c) - 1 + 1, nchar(c)) == ".", gsub("\\.", "_pct", c), c)
     names(fangraphs_leaders) <- c
     
-    names(fangraphs_leaders)[73] <- "Fastball_pct"
+    if (bat_pitch == 'bat') {
+      names(fangraphs_leaders)[73] <- "Fastball_pct"
+    } else if (bat_pitch == 'pit') {
+      names(fangraphs_leaders)[76] <- "Fastball_pct"
+    }
     
     # Remove percentages
     for (i in c(1,4:ncol(fangraphs_leaders))) {
