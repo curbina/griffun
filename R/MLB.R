@@ -78,7 +78,7 @@ statcast_leaderboard <-
     
     #Replacing Names that match Fangraphs
     avg_dist$Name <-
-      str_replace(avg_dist$Name,"Byung ho Park","Byung-ho Park")
+      str_replace(avg_dist$Name,"Byung Ho Park","Byung-ho Park")
     
     avg_dist$Name <-
       str_replace(avg_dist$Name,"Norichika Aoki","Nori Aoki")
@@ -122,7 +122,7 @@ statcast_leaderboard <-
     
     #Replacing Names that match Fangraphs
     avg_exit$Name <-
-      str_replace(avg_dist$Name,"Byung ho Park","Byung-ho Park")
+      str_replace(avg_dist$Name,"Byung Ho Park","Byung-ho Park")
     
     avg_exit$Name <-
       str_replace(avg_exit$Name,"Norichika Aoki","Nori Aoki")
