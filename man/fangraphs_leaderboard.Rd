@@ -4,7 +4,7 @@
 \alias{fangraphs_leaderboard}
 \title{Scrape Batter Leaderboards from FanGraphs.com}
 \usage{
-fangraphs_leaderboard(bat_pitch, yearfrom = NULL, yearto = NULL,
+fangraphs_leaderboard(bat_pitch = "pit", yearfrom = NULL, yearto = NULL,
   qual = NULL, split = NULL)
 }
 \arguments{
@@ -25,6 +25,6 @@ data frame
 This function allows you to scrape all leaderboard statistics from FanGraphs.com.
 }
 \examples{
-fgh<-fangraphs_leaderboard('bat',2013,2015, 200, 0)
+fgh<-fangraphs_leaderboard('pit',2016,2016, 60, 0)
 }
 
