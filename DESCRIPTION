@@ -1,6 +1,6 @@
 Package: griffun
-Version: 1.5.2
-Date: 2016-03-24
+Version: 1.5.3
+Date: 2016-06-28
 Title: My Collection of Functions
 Author: Drew Griffith
 Maintainer: Drew Griffith <wgriffith2@gmail.com>
@@ -12,7 +12,9 @@ Depends:
 	stringr,
 	sqldf,
 	rvest,
-	dplyr
+	dplyr,
+	stringi,
+	chron
 Suggests:
     testthat
 Description: Anyone who finds a function suitable for reuse is welcome
