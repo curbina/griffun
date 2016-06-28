@@ -14,7 +14,8 @@ Depends:
 	rvest,
 	dplyr,
 	stringi,
-	chron
+	chron,
+	magrittr
 Suggests:
     testthat
 Description: Anyone who finds a function suitable for reuse is welcome
