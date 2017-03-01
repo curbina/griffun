@@ -367,13 +367,13 @@ WarGames_ESPN_proj <- function(bat_pitch,leagueID = 86607) {
     end_params <- '&slotCategoryGroup=1'
     cols <-
       c(
-        "Number","NameTeamPos","Type","Name","AB","x1B","x2B","x3B","HR","BB","HBP","SAC","SB","CS","PTS"
+        "Number","NameTeamPos","Type","Name","AB","H","x2B","x3B","HR","BB","HBP","SAC","SB","CS","PTS"
       )
   } else if (bat_pitch == 'pit') {
     end_params <- '&slotCategoryGroup=2'
     cols <-
       c(
-        "Number","NameTeamPos","Type","Name","GS","IP","HR","BB","HB","K","SV","HD","PTS"
+        "Number","NameTeamPos","Type","Name","GS","IP","H","HR","BB","HB","K","SV","HD","PTS"
       )
   }
   
