@@ -14,8 +14,9 @@
 #' @export
 ###############################################################################
 
+
 statcast_leaderboard <-
-  function(bat_pitch = 'bat',year = NULL, from.date = NULL, qual = 20) {
+  function(bat_pitch = 'pit',year = NULL, from.date = NULL, qual = 20) {
     library(rvest)
     library(stringr)
     library(sqldf)
@@ -59,12 +60,10 @@ statcast_leaderboard <-
     
     # guess_encoding(df)
     avg_dist <- as.data.frame(df)
-    # avg_dist <- avg_dist[,c(1:4)]
+    avg_dist <- avg_dist[,c(1:4)]
     
     names(avg_dist) <-
-      c("Rank", "Name", "Events", "Avg_Distance","V1","V2","V3","V4","V5","V6","V7","v8","V9")
-    
-    avg_dist <- subset(avg_dist, select = c("Rank", "Name", "Events", "Avg_Distance"))
+      c("Rank", "Name", "Events", "Avg_Distance")
     
     avg_dist <- avg_dist[complete.cases(avg_dist),]
     avg_dist$Avg_Distance <-
@@ -102,10 +101,10 @@ statcast_leaderboard <-
     
     # guess_encoding(df)
     avg_exit <- as.data.frame(df)
-    # avg_exit <- avg_exit[,c(1:4)]
+    avg_exit <- avg_exit[,c(1:4)]
     
     names(avg_exit) <-
-      c("Rank", "Name", "Events", "Avg_Exit_Velocity","V1","V2","V3","V4","V5","V6","V7","v8","V9")
+      c("Rank", "Name", "Events", "Avg_Exit_Velocity")
     
     avg_exit <- subset(avg_exit, select = c("Rank", "Name", "Events", "Avg_Exit_Velocity"))
     
