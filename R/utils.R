@@ -1,11 +1,50 @@
 ###############################################################################
-# Collection of General Utilities by Drew Griffith
-#
-# For more information please visit my blog at http://drewgriffith15.tumblr.com/
-
-###############################################################################
+# Collection of R functions by Drew Griffith
 ###############################################################################
 
+###############################################################################
+#' ATR Bands
+#'
+#' @param xts
+#' @param innervalue numeric factor for inner bands
+#' @param outervalue numeric factor for outer bands
+#' @param length numeric value to measure ATR
+#' @references
+#' @export
+ATR210 <-
+  function(prices,
+           innervalue = 1.5,
+           outervalue = 2.0,
+           length = 10) {
+    library(TTR)
+    library(quantmod)
+    prices <- OHLC(data.frame(prices))
+    outervalueshift <-
+      outervalue * EMA(pmax(lag(prices[, 4], 1), prices[, 2]) - pmin(lag(prices[, 4], 1), prices[, 3]), length)
+    innervalueshift <-
+      innervalue * EMA(pmax(lag(prices[, 4], 1), prices[, 2]) - pmin(lag(prices[, 4], 1), prices[, 3]), length)
+    average <- EMA(prices[, 4], length)
+    upperouterband <- average + outervalueshift
+    upperinnerband <- average + innervalueshift
+    lowerinnerband <- average - innervalueshift
+    lowerouterband <- average - outervalueshift
+    tmp <-
+      cbind(upperouterband,
+            upperinnerband,
+            average,
+            lowerinnerband,
+            lowerouterband)
+    # tmp <- tmp[complete.cases(tmp)]
+    colnames(tmp) <-
+      c("upper.outer",
+        "upper.inner",
+        "avg",
+        "lower.inner",
+        "lower.outer")
+    return(tmp)
+  }
+
+###############################################################################
 #' Remove prefixes or suffixes
 #' @param sep character separator, defaults to ","
 #' @param side where to look, "left" (default) or "right"
