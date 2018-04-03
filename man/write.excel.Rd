@@ -24,4 +24,3 @@ Exporting a R object to Excel via the clipboard
 write.excel(dat)
 }
 }
-

@@ -22,4 +22,3 @@ Original code from Bill Petti and modified as needed
 bb_p<-bbref_leaderboard('pit',"2015-05-10", "2015-06-20")
 bb_h<-bbref_leaderboard('bat',n=30) # current year; last 30 days from today
 }
-

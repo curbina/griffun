@@ -23,4 +23,3 @@ based on the frequency (average of N rows)
 seasonals(x,12)
 }
 }
-

@@ -19,4 +19,3 @@ Returns a full list of MLB players eligibility
  for hitters or pitchers for ESPN Standard leagues'
  Retreives primary position only
 }
-

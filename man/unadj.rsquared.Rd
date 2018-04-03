@@ -22,4 +22,3 @@ model
 unadj.rsquared(fit)
 }
 }
-

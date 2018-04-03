@@ -23,4 +23,3 @@ temp = list()
 temp$val1 = ifnull(temp$val1, 4)
 }
 }
-

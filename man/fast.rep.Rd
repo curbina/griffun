@@ -22,4 +22,3 @@ This function is a faster version of rep fucntion
 fast.rep(c(1,NA,2,Inf,3), 4)
 }
 }
-

@@ -23,4 +23,3 @@ matrix(1:3, nr=5, nc=3, byrow=T)
 repRow(1:3, 5)
 }
 }
-

@@ -32,4 +32,3 @@ If the third Friday of the month is a holiday, all trading dates are moved forwa
 
 \url{http://www.cboe.com/TradTool/ExpirationCalendar.aspx}
 }
-

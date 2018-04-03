@@ -26,4 +26,3 @@ str_filter(ex, side = "right" , greedy = FALSE)
 \references{
 #' @references http://www.r-bloggers.com/string-manipulations-on-full-names/
 }
-

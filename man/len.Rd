@@ -20,4 +20,3 @@ This function is a shortcut for length function
 len(1:10)
 }
 }
-

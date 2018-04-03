@@ -22,4 +22,3 @@ This function will count number of non NA elements in the given matrix
 cnt(matrix(c(1,NA,2,3),2,2))
 }
 }
-

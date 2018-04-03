@@ -22,4 +22,3 @@ str_detach(ex, side = "right" , greedy = FALSE)
 \references{
 http://www.r-bloggers.com/string-manipulations-on-full-names/
 }
-

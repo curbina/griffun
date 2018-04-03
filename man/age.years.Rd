@@ -24,4 +24,3 @@ y <- as.Date("2004-02-28")
 age.years(x, y)
 }
 }
-

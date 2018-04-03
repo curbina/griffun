@@ -22,4 +22,3 @@ This function will replace all NA, NaN, Inf with given values
 ifna(c(1,NA,2,Inf,3), 4)
 }
 }
-

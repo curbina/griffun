@@ -4,7 +4,7 @@
 \alias{statcast_leaderboard}
 \title{Scrape Batted Ball Distance/Velocity Data from Baseball Savant / MLB Statcast}
 \usage{
-statcast_leaderboard(bat_pitch = "bat", year = NULL, from.date = NULL,
+statcast_leaderboard(bat_pitch = "pit", year = NULL, from.date = NULL,
   qual = 20)
 }
 \arguments{
@@ -25,4 +25,3 @@ This function allows you to scrape all leaderboard statistics from the Baseball 
 \examples{
 statcast<-statcast_leaderboard('bat', 2016, "2016-04-10", 20)
 }
-

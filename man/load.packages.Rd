@@ -27,4 +27,3 @@ This function a convience wrapper for install.packages() function
 load.packages('forecast,quantmod')
 }
 }
-

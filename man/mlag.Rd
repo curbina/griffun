@@ -24,4 +24,3 @@ For example: mlag(x,1) - use yesterday's values and
 mlag(1:10)
 }
 }
-

@@ -21,4 +21,3 @@ that it is tab delimited, and that it has a header.
 dat=read.excel()
 }
 }
-

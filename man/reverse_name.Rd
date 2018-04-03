@@ -24,4 +24,3 @@ x = "Ruth, Babe"
 reverse_name(x)
 }
 }
-

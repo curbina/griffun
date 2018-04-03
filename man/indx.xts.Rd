@@ -20,4 +20,3 @@ NOTE indx.xts is the same name as the indx function in the XTS package
 indx.xts(make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1)))
 }
 }
-

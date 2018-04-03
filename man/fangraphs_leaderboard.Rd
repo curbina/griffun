@@ -27,4 +27,3 @@ This function allows you to scrape all leaderboard statistics from FanGraphs.com
 \examples{
 fgh<-fangraphs_leaderboard('pit',2016,2016, 60, 0)
 }
-

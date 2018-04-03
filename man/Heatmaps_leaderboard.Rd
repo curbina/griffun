@@ -18,4 +18,3 @@ Limitations: Cannot change year. Always current
 \examples{
 heatmaps<-Heatmaps_leaderboard('bat')
 }
-

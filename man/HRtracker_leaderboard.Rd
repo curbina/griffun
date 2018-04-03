@@ -18,4 +18,3 @@ Limitations: Cannot change year. Always current
 \examples{
 hrt<-HRtracker_leaderboard('bat')
 }
-

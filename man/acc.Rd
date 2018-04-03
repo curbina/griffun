@@ -22,4 +22,3 @@ This function will calculate the absolute average accuracy of compartive dataset
 acc(y,x)
 }
 }
-

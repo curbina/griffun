@@ -20,4 +20,3 @@ This function will normalize a vector
 normalize(x)
 }
 }
-

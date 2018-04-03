@@ -19,4 +19,3 @@ Adding future dates to a forecast
 }
 \keyword{dates}
 \keyword{forecast}
-

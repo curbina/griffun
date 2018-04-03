@@ -15,4 +15,3 @@ StockCharts Technical Rank
 \references{
 \url{http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:sctr}
 }
-

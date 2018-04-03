@@ -22,4 +22,3 @@ Create \code{\link{xts}} object, faster version of \code{\link{xts}} fucntion
 make.xts(1:101,seq(Sys.Date()-100, Sys.Date(), 1))
 }
 }
-

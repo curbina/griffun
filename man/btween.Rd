@@ -26,4 +26,3 @@ This function mimics the SQL between clause and returns a logical indx
 btween( 1:10, 5.5, 6.5 )
 }
 }
-

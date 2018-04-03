@@ -23,4 +23,3 @@ matrix(1:5, nr=5, nc=3, byrow=F)
 repCol(1:5, 3)
 }
 }
-

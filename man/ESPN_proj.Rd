@@ -18,4 +18,3 @@ Returns projections for hitters or pitchers for a standard 5x5 ROTO leagues
 ESPN_hitters<-ESPN_proj('bat')
 
 }
-

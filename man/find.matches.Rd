@@ -26,4 +26,3 @@ or coefficient determination and returns a data frame preparing for a regression
 The function also outputs "newdata" to be used in the forecast horizon if needed, and
 the location in the data set where the match begins.
 }
-

@@ -27,4 +27,3 @@ dat<-data.frame(matrix(runif(100000,0,1),ncol=10))
 summarize.by(dat)
 }
 }
-

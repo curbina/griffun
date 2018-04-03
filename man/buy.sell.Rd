@@ -21,4 +21,3 @@ series
 buy.sell(x)
 }
 }
-

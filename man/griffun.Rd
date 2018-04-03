@@ -8,4 +8,3 @@
 \description{
 My library of functions
 }
-
