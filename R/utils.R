@@ -648,8 +648,8 @@ seasonals <- function(x,frequency){
 ###############################################################################
 
 normalize <- function(x){
-  minV = min(x)
-  maxV = max(x)
+  minV = min(x,na.rm = TRUE)
+  maxV = max(x,na.rm = TRUE)
   for (i in 1:NROW(x)) {
     x[i] = ((x[i]-minV)/(maxV-minV))
   }
