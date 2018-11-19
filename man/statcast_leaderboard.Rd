@@ -4,8 +4,8 @@
 \alias{statcast_leaderboard}
 \title{Scrape Batted Ball Distance/Velocity Data from Baseball Savant / MLB Statcast}
 \usage{
-statcast_leaderboard(bat_pitch = "pit", year = NULL, from.date = NULL,
-  qual = 20)
+statcast_leaderboard(bat_pitch = "pit", year = NULL,
+  from.date = NULL, qual = 20)
 }
 \arguments{
 \item{bat_pitch}{either 'bat' or 'pit'}

@@ -3,6 +3,38 @@
 ###############################################################################
 
 ###############################################################################
+#' plot.lines
+#'
+#' @param y xts object to plot
+#' @param type plot type
+#' @param col color
+#' @param ... other parameters to lines
+#' @references
+#' @export
+plot.lines <- function(y,
+                       type = 'l',
+                       col = par('col'),
+                       ...)
+{
+  if (has.Cl(y))
+    y1 = Cl(y)
+  else
+    y1 = y[, 1]
+  temp.x = attr(y, 'index')
+  if (type == 'l' & len(col) > 1) {
+    for (icol in unique(col)) {
+      lines(temp.x,
+            iif(col == icol, y1, NA),
+            type = type,
+            col = icol,
+            ...)
+    }
+  } else {
+    lines(temp.x, y1, type = type, col = col, ...)
+  }
+}
+
+###############################################################################
 #' ATR Bands
 #'
 #' @param xts

@@ -4,8 +4,8 @@
 \alias{fangraphs_leaderboard}
 \title{Scrape Batter Leaderboards from FanGraphs.com}
 \usage{
-fangraphs_leaderboard(bat_pitch = "pit", yearfrom = NULL, yearto = NULL,
-  qual = NULL, split = NULL)
+fangraphs_leaderboard(bat_pitch = "pit", yearfrom = NULL,
+  yearto = NULL, qual = NULL, split = NULL)
 }
 \arguments{
 \item{bat_pitch}{either 'bat' or 'pit'}

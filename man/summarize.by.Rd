@@ -4,7 +4,7 @@
 \alias{summarize.by}
 \title{Summarize content}
 \usage{
-summarize.by(x, step = 1000, fun = "mean")
+\method{summarize}{by}(x, step = 1000, fun = "mean")
 }
 \arguments{
 \item{x}{object}
